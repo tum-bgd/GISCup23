@@ -1,0 +1,10 @@
+__pycache__/
+
+raw/*
+!raw/.gitkeep
+
+data/reg/*
+!data/reg/.gitkeep
+
+data/mask/*
+!data/mask/.gitkeep
