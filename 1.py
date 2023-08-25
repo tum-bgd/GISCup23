@@ -8,7 +8,7 @@ for img in ALL_RAW_IMAGE:
     with rasterio.open(PATH_RAW + img, "r") as a:
         for r in ALL_REGION:
             # trX, teX
-            maskedImgName = './data/reg/' + imgName + '_' + r['name'] + '_' + TrOrTE(imgName, r['name']) + '.tiff'
+            maskedImgName = PATH_REGN + imgName + '_' + r['name'] + '_' + TrOrTE(imgName, r['name']) + '.tiff'
             out_image, out_transform = rasterio.mask.mask(a, r['shape'], crop=True)
             out_meta = a.meta
             out_meta.update({
@@ -22,5 +22,5 @@ for img in ALL_RAW_IMAGE:
             # trY
             tar = mask[mask.image==img][mask.region_num==int(r['name'])]
             if len(tar):
-                maskedPLGName = './data/mask/' + imgName + '_' + r['name'] + '.gpkg'
+                maskedPLGName = PATH_PLGN + imgName + '_' + r['name'] + '.gpkg'
                 tar.to_file(maskedPLGName, driver="GPKG")
