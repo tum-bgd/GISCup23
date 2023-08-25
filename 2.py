@@ -93,6 +93,10 @@ for file in os.listdir(PATH_PLGN):
                             plt.show()
                         continue
 
+                    # check whether have label
+
+                    # check if all label are in tiles. If not, add them.
+
                     # update tile boundaries for this region
                     sampledTile = pd.concat([sampledTile, geopandas.GeoDataFrame({'tile': GetTilePlgn(pic, w, h)}, crs="EPSG:3857", geometry='tile')], ignore_index=True)
                     i += 1
