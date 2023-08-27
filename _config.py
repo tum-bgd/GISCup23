@@ -13,6 +13,8 @@ PATH_TILE_PLGN = "./data/tileplgn/"
 PATH_TILE_WITHLABEL = "./data/tilewithlabel/"
 PATH_TILE_NONELABEL = "./data/tilenonelabel/"
 
+PATH_TILE_RECORD = "./data/tilerecord/"
+
 
 RAW_IMAGE1 = "Greenland26X_22W_Sentinel2_2019-06-03_05.tif"
 RAW_IMAGE2 = "Greenland26X_22W_Sentinel2_2019-06-19_20.tif"
