@@ -8,7 +8,11 @@ PATH_RAW_REGION = PATH_RAW + "lakes_regions.gpkg"
 
 PATH_PLGN = "./data/plgn/"
 PATH_REGN = "./data/regn/"
-PATH_TILEMASK = "./data/tilemask/"
+PATH_TILE_MASK = "./data/tilemask/"
+PATH_TILE_PLGN = "./data/tileplgn/"
+PATH_TILE_WITHLABEL = "./data/tilewithlabel/"
+PATH_TILE_NONELABEL = "./data/tilenonelabel/"
+
 
 RAW_IMAGE1 = "Greenland26X_22W_Sentinel2_2019-06-03_05.tif"
 RAW_IMAGE2 = "Greenland26X_22W_Sentinel2_2019-06-19_20.tif"
@@ -32,7 +36,7 @@ TILE_H = 1024
 TILE_W = 1024
 STEP = 512
 
-LOWER_BLUE = numpy.array([ 80,  50,  50])
+LOWER_BLUE = numpy.array([ 80,  35,  35])
 UPPER_BLUE = numpy.array([130, 255, 255])
 
 

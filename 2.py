@@ -1,3 +1,4 @@
+import copy
 import cv2
 import os
 import pandas as pd
@@ -9,30 +10,6 @@ from matplotlib import pyplot as plt
 from _config import *
 from utils.dir import ReloadDir
 
-
-# maxH = 0
-# maxW = 0
-# for file in os.listdir(PATH_PLGN):
-#     if '.gpkg' in file:
-#         plgns = geopandas.read_file(PATH_PLGN + file)
-#         with rasterio.open(PATH_REGN + file.replace('.gpkg', '_tr.tiff'), "r") as pic:
-#             for plgn in plgns['geometry']:
-#                 hhh = geopandas.GeoSeries([plgn])
-#                 out_image, _ = rasterio.mask.mask(pic, hhh, crop=True)
-#                 _, thisH, thisW = out_image.shape
-#                 if thisH > maxH:
-#                     maxH = thisH
-#                 if thisW > maxW:
-#                     maxW = thisW
-# print(maxH, maxW)
-
-# we know that the max H and W for ice lakes are 790 and 1134.
-
-
-# def coord2loc(picHandler, coord):
-#     assert 0 <= coord[0] and coord[0] <= picHandler.width
-#     assert 0 <= coord[1] and coord[1] <= picHandler.height
-#     return picHandler.transform * (coord[0], coord[1])
 
 def GetTileTopLeft(w, h):
     tileW = [STEP*i for i in range((w-TILE_W) // STEP + 1)]
@@ -50,7 +27,7 @@ def GetTilePlgn(picHandler, w, h):
     tr = picHandler.xy(h,          w+TILE_W-1)
     bl = picHandler.xy(h+TILE_H-1, w         )
     br = picHandler.xy(h+TILE_H-1, w+TILE_W-1)
-    return [shapely.Polygon((tl, tr, br, bl, tl))]
+    return shapely.Polygon((tl, tr, br, bl, tl))
 
 
 def GetMaybeLakeMask(img):
@@ -58,21 +35,44 @@ def GetMaybeLakeMask(img):
     return cv2.inRange(cv2HSVimg, LOWER_BLUE, UPPER_BLUE)/255
 
 
+def GetIntersection(tile, plgnInRegn):
+    plgn = plgnInRegn.intersection(tile)
+    return plgn[~plgn.is_empty]
+
+
+def isPlgnInTile(plgn, tile):
+    res = numpy.empty((len(plgn), ), dtype=bool)
+    aaa = copy.deepcopy(tile)
+    aaa['dummy'] = 0
+    union = aaa.dissolve(by='dummy')
+    for k in range(len(plgn)):
+        res[k] = plgn['geometry'].iloc[k].within(union).iloc[0].values[0]
+    return res
+
+
 i = 0
+# TODO: switch to command line options
 PLOT_TILE_MASK = False
-ReloadDir(PATH_TILEMASK, gitkeep=True)
+RELOAD = True
+if RELOAD:
+    ReloadDir(PATH_TILE_MASK, gitkeep=True)
+    ReloadDir(PATH_TILE_PLGN, gitkeep=True)
+    ReloadDir(PATH_TILE_WITHLABEL, gitkeep=True)
+    ReloadDir(PATH_TILE_NONELABEL, gitkeep=True)
 for file in os.listdir(PATH_PLGN):
     if '.gpkg' in file:
-        plgns = geopandas.read_file(PATH_PLGN + file)
+        plgn = geopandas.read_file(PATH_PLGN + file)
         sampledTile = geopandas.GeoDataFrame(columns=['tile'], crs="EPSG:3857", geometry='tile')
         regnName = PATH_REGN + file.replace('.gpkg', '_tr.tiff')
+        print('## Processing', file)
         with rasterio.open(regnName, "r") as pic:
             # shape: HW
             picW, picH = pic.width, pic.height
             tileW, tileH = GetTileTopLeft(picW, picH)
             for w in tileW:
                 for h in tileH:
-                    out_image, _ = rasterio.mask.mask(pic, geopandas.GeoSeries(GetTilePlgn(pic, w, h)), crop=True)
+                    tileBound = GetTilePlgn(pic, w, h)
+                    out_image, _ = rasterio.mask.mask(pic, geopandas.GeoSeries([tileBound]), crop=True)
                     out_image = out_image.transpose(1, 2, 0)
                     assert out_image.shape == (1024, 1024, 3)
 
@@ -83,8 +83,9 @@ for file in os.listdir(PATH_PLGN):
 
                     # skip images with too small blue areas (<0.08%)
                     lakeRatio = numpy.sum(GetMaybeLakeMask(out_image) == 1) / 1024 / 1024
-                    if lakeRatio < 0.001:
-                        print('DROP:', regnName, w, h, "too small blue areas {:.3f}% < 0.1%)".format(lakeRatio))
+                    if lakeRatio < 0.0001:
+                        # at least 0.01% pixels are likely to be a lake (approx. 105 pixels).
+                        # print('DROP:', regnName, w, h, "too small blue areas {:.3f}% < 0.1%)".format(lakeRatio))
                         if lakeRatio != 0 and PLOT_TILE_MASK:
                             plt.subplot(121)
                             plt.imshow(out_image)
@@ -94,22 +95,21 @@ for file in os.listdir(PATH_PLGN):
                         continue
 
                     # check whether have label
+                    plgnInTile = GetIntersection(tileBound, plgn)
+                    if len(plgnInTile):
+                        # with labels
+                        plt.imsave(PATH_TILE_WITHLABEL + file[:-5] + '_' + str(w) + '_' + str(h) + '.png', out_image)
+                        # save label
+                        plgnInTile.to_file(PATH_TILE_PLGN + file[:-5] + '_' + str(w) + '_' + str(h) + '.gpkg', driver="GPKG")
+                        # update tile boundaries for this region
+                        sampledTile = pd.concat([sampledTile, geopandas.GeoDataFrame({'tile': [GetTilePlgn(pic, w, h)]}, crs="EPSG:3857", geometry='tile')], ignore_index=True)
+                        i += 1
+                    else:
+                        # without labels
+                        plt.imsave(PATH_TILE_NONELABEL + file[:-5] + '_' + str(w) + '_' + str(h) + '.png', out_image)
 
-                    # check if all label are in tiles. If not, add them.
+        # check if all label are in tiles by union
+        assert(isPlgnInTile(plgn, sampledTile).all())
+        sampledTile.to_file(PATH_TILE_MASK + file, driver="GPKG")
 
-                    # update tile boundaries for this region
-                    sampledTile = pd.concat([sampledTile, geopandas.GeoDataFrame({'tile': GetTilePlgn(pic, w, h)}, crs="EPSG:3857", geometry='tile')], ignore_index=True)
-                    i += 1
-
-        sampledTile.to_file(PATH_TILEMASK + file, driver="GPKG")
-print(i)
-
-
-
-                    # print(w, h)
-            # print(pic.bounds)
-            # print(pic.width, pic.height)
-            # print(len(tileW) * len(tileH))
-            # print(pic.transform)
-            # print(pic.transform * (0, 0), pic.xy(0, 0))
-            # print(pic.index(pic.bounds.left, pic.bounds.top))
+print('# of img with labels:', i)

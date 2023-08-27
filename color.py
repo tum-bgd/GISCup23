@@ -8,3 +8,5 @@ def GetHSV(r, g, b):
 
 GetHSV(  0,   0, 255)  # blue
 GetHSV(103, 168, 152)  # 06-03_2 has a green lake...
+GetHSV(169,	206, 226)
+GetHSV(182, 207, 220)
