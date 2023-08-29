@@ -12,6 +12,7 @@ PATH_TILE_MASK = "./data/tilemask/"
 PATH_TILE_PLGN = "./data/tileplgn/"
 PATH_TILE_WITHLABEL = "./data/tilewithlabel/"
 PATH_TILE_NONELABEL = "./data/tilenonelabel/"
+PATH_TILE_PLOT = "./data/tileplot/"
 
 PATH_TILE_RECORD = "./data/tilerecord/"
 

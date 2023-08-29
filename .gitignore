@@ -5,3 +5,5 @@ raw/*
 
 data/*/*
 !data/*/.gitkeep
+
+detectron2/
