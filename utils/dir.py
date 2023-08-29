@@ -5,6 +5,8 @@ import shutil
 def ReloadDir(path, gitkeep=False):
     try:
         shutil.rmtree(path)
+    except Exception:
+        pass
     finally:
         os.mkdir(path)
     if gitkeep:

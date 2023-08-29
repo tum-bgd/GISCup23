@@ -1,5 +1,20 @@
+import geopandas
 import rasterio.mask
 from _config import *
+
+
+ALL_RAW_IMAGE = [RAW_IMAGE1, RAW_IMAGE2, RAW_IMAGE3, RAW_IMAGE4]
+
+reg = geopandas.read_file(PATH_RAW_REGION)
+
+REGION1 = {'name': '1', 'shape': reg[reg.region_num==1]["geometry"]}
+REGION2 = {'name': '2', 'shape': reg[reg.region_num==2]["geometry"]}
+REGION3 = {'name': '3', 'shape': reg[reg.region_num==3]["geometry"]}
+REGION4 = {'name': '4', 'shape': reg[reg.region_num==4]["geometry"]}
+REGION5 = {'name': '5', 'shape': reg[reg.region_num==5]["geometry"]}
+REGION6 = {'name': '6', 'shape': reg[reg.region_num==6]["geometry"]}
+
+ALL_REGION = [REGION1, REGION2, REGION3, REGION4, REGION5, REGION6]
 
 
 mask = geopandas.read_file(PATH_RAW_TRAIN)

@@ -1,5 +1,5 @@
 import json
-import numpy
+import geopandas
 import os
 import rasterio
 import shapely

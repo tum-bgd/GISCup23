@@ -1,5 +1,6 @@
 import copy
 import cv2
+import geopandas
 import os
 import pandas as pd
 import shapely
