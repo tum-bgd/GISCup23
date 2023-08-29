@@ -38,50 +38,49 @@ def GetPlgnList(plgn):
 
 k = 0
 for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
-    if '.png' in tileFileName:
-        print("## Processing", k, "##", tileFileName)
+    print("## Processing", k, "##", tileFileName)
 
-        record = {}
-        record["file_name"] = tileFileName
-        record["image_id"] = k
-        record["height"] = TILE_H
-        record["width"] = TILE_W
+    record = {}
+    record["file_name"] = tileFileName
+    record["image_id"] = k
+    record["height"] = TILE_H
+    record["width"] = TILE_W
 
-        a = tileFileName[:-4].split('_')
-        w = int(a[2])
-        h = int(a[3])
+    a = tileFileName[:-4].split('_')
+    w = int(a[2])
+    h = int(a[3])
 
-        rawTilePlgn = geopandas.read_file(PATH_TILE_PLGN + tileFileName.replace('png', 'gpkg'))
-        tilePlgn = GetPlgnList(rawTilePlgn)
-        with rasterio.open(PATH_REGN + a[0] + '_' + a[1] + '_tr.tiff', "r") as regn:
-            allPlgn = []
-            plt.figure()
-            plt.subplot(121)
-            plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
-            plt.subplot(122)
-            plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
-            for i in range(len(tilePlgn)):
-                plgn = tilePlgn[i].exterior.coords
-                allX, allY = [], []
-                for point in plgn:
-                    y, x = regn.index(point[0], point[1])
-                    allX.append(x-w)
-                    allY.append(y-h)
-                # I truly do not know why plus 0.5. I just mimic the steps in the balloon example of detectron2
-                thisSegm = [(x + 0.5, y + 0.5) for x, y in zip(allX, allY)]
-                thisSegm = [p for x in thisSegm for p in x]
-                thisAnno = {
-                    "bbox": [min(allX), min(allY), max(allX), max(allY)],
-                    "bbox_mode": 0,  # BoxMode.XYXY_ABS
-                    "segmentation": [thisSegm],
-                    "category_id": 0,
-                }
-                allPlgn.append(thisAnno)
-                plt.plot(allX, allY, 'r')
-            if PLOT:
-                plt.show()
-            record["annotations"] = allPlgn
-            plt.close()
-        k += 1
-        with open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), "w") as jsonFile:
-            json.dump(record, jsonFile)
+    rawTilePlgn = geopandas.read_file(PATH_TILE_PLGN + tileFileName.replace('png', 'gpkg'))
+    tilePlgn = GetPlgnList(rawTilePlgn)
+    with rasterio.open(PATH_REGN + a[0] + '_' + a[1] + '_tr.tiff', "r") as regn:
+        allPlgn = []
+        plt.figure()
+        plt.subplot(121)
+        plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
+        plt.subplot(122)
+        plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
+        for i in range(len(tilePlgn)):
+            plgn = tilePlgn[i].exterior.coords
+            allX, allY = [], []
+            for point in plgn:
+                y, x = regn.index(point[0], point[1])
+                allX.append(x-w)
+                allY.append(y-h)
+            # I truly do not know why plus 0.5. I just mimic the steps in the balloon example of detectron2
+            thisSegm = [(x + 0.5, y + 0.5) for x, y in zip(allX, allY)]
+            thisSegm = [p for x in thisSegm for p in x]
+            thisAnno = {
+                "bbox": [min(allX), min(allY), max(allX), max(allY)],
+                "bbox_mode": 0,  # BoxMode.XYXY_ABS
+                "segmentation": [thisSegm],
+                "category_id": 0,
+            }
+            allPlgn.append(thisAnno)
+            plt.plot(allX, allY, 'r')
+        if PLOT:
+            plt.show()
+        record["annotations"] = allPlgn
+        plt.close()
+    k += 1
+    with open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), "w") as jsonFile:
+        json.dump(record, jsonFile)

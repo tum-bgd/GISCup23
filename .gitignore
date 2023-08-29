@@ -4,6 +4,5 @@ raw/*
 !raw/.gitkeep
 
 data/*/*
-!data/*/.gitkeep
 
 detectron2/
