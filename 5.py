@@ -4,9 +4,6 @@ import pickle
 import random
 import shutil
 
-
-# from detectron2.structures import BoxMode
-
 from _config import *
 from utils.dir import ReloadDir
 
@@ -26,12 +23,15 @@ trDict = []
 vaDict = []
 for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
     print("## Processing ##", tileFileName)
+    thisDict = json.load(open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), 'r'))
     if i in trIdx:
         shutil.copy(PATH_TILE_WITHLABEL + tileFileName, PATH_TR + tileFileName)
-        trDict.append(json.load(open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), 'r')))
+        thisDict["file_name"] = PATH_TR + thisDict["file_name"]
+        trDict.append(thisDict)
     elif i in vaIdx:
         shutil.copy(PATH_TILE_WITHLABEL + tileFileName, PATH_VA + tileFileName)
-        vaDict.append(json.load(open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), 'r')))
+        thisDict["file_name"] = PATH_VA + thisDict["file_name"]
+        vaDict.append(thisDict)
     i += 1
 
 for d in trDict:
@@ -39,5 +39,5 @@ for d in trDict:
 for d in vaDict:
     assert(isinstance(d, dict))
 
-pickle.dump(trDict, open('./data/trDict.pkl', 'wb'))
-pickle.dump(vaDict, open('./data/vaDict.pkl', 'wb'))
+pickle.dump(trDict, open(PATH_TR_DICT, 'wb'))
+pickle.dump(vaDict, open(PATH_VA_DICT, 'wb'))

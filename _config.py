@@ -16,6 +16,8 @@ PATH_TILE_RECORD = "./data/tilerecord/"
 
 PATH_TR = "./data/train/"
 PATH_VA = "./data/valid/"
+PATH_TR_DICT = "./data/trDict.pkl"
+PATH_VA_DICT = "./data/vaDict.pkl"
 
 
 RAW_IMAGE1 = "Greenland26X_22W_Sentinel2_2019-06-03_05.tif"
