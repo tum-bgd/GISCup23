@@ -5,10 +5,23 @@ Segmentation on images finding ice lakes in Greenland.
 ## Setup
 
 1. Download the dataset from the official website, and put all files in `./raw`
-2. Setup virtual environment
+
+2. Setup virtual environment for preprocessing
 
     ```
     conda env create -f environment.yml
+    ```
+
+3. Docker
+
+    ```
+    docker build --build-arg USER_ID=$UID -t detectron2 .
+    ```
+
+    or
+
+    ```
+    docker pull tumbgd/detectron2
     ```
 
 ## Steps
