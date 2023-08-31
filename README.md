@@ -9,7 +9,7 @@ Segmentation on images finding ice lakes in Greenland.
 2. Setup virtual environment for preprocessing
 
     ```
-    conda env create -f environment.yml
+    conda env create -f env-preprocessing.yml
     ```
 
 3. Docker
