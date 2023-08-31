@@ -98,7 +98,7 @@ for file in os.listdir(PATH_PLGN):
                 plgnInTile = GetIntersection(tileBound, plgn)
                 if len(plgnInTile):
                     # with labels
-                    plt.imsave(PATH_TILE_WITHLABEL + file[:-5] + '_' + str(w) + '_' + str(h) + '.png', out_image)
+                    plt.imsave(PATH_TILE_WITHLABEL + file[:-5] + '_' + str(w) + '_' + str(h) + '.jpg', out_image)
                     # save label
                     plgnInTile.to_file(PATH_TILE_PLGN + file[:-5] + '_' + str(w) + '_' + str(h) + '.gpkg', driver="GPKG")
                     # update tile boundaries for this region
@@ -106,7 +106,7 @@ for file in os.listdir(PATH_PLGN):
                     i += 1
                 else:
                     # without labels
-                    plt.imsave(PATH_TILE_NONELABEL + file[:-5] + '_' + str(w) + '_' + str(h) + '.png', out_image)
+                    plt.imsave(PATH_TILE_NONELABEL + file[:-5] + '_' + str(w) + '_' + str(h) + '.jpg', out_image)
 
     # check if all label are in tiles by union
     assert(isPlgnInTile(plgn, sampledTile).all())

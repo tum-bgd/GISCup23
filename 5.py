@@ -5,6 +5,7 @@ import random
 import shutil
 
 from _config import *
+from model import PATH_TR_DICT, PATH_VA_DICT
 from utils.dir import ReloadDir
 
 
@@ -23,7 +24,7 @@ trDict = []
 vaDict = []
 for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
     print("## Processing ##", tileFileName)
-    thisDict = json.load(open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), 'r'))
+    thisDict = json.load(open(PATH_TILE_RECORD + tileFileName.replace('jpg', 'json'), 'r'))
     if i in trIdx:
         shutil.copy(PATH_TILE_WITHLABEL + tileFileName, PATH_TR + tileFileName)
         thisDict["file_name"] = PATH_TR + thisDict["file_name"]

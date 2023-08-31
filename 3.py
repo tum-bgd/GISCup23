@@ -50,7 +50,7 @@ for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
     w = int(a[2])
     h = int(a[3])
 
-    rawTilePlgn = geopandas.read_file(PATH_TILE_PLGN + tileFileName.replace('png', 'gpkg'))
+    rawTilePlgn = geopandas.read_file(PATH_TILE_PLGN + tileFileName.replace('jpg', 'gpkg'))
     tilePlgn = GetPlgnList(rawTilePlgn)
     with rasterio.open(PATH_REGN + a[0] + '_' + a[1] + '_tr.tiff', "r") as regn:
         allPlgn = []
@@ -82,5 +82,5 @@ for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
         record["annotations"] = allPlgn
         plt.close()
     k += 1
-    with open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), "w") as jsonFile:
+    with open(PATH_TILE_RECORD + tileFileName.replace('jpg', 'json'), "w") as jsonFile:
         json.dump(record, jsonFile)

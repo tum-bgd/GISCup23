@@ -19,7 +19,7 @@ for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
     plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
     plt.subplot(122)
     plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
-    tileAnnos = json.load(open(PATH_TILE_RECORD + tileFileName.replace('png', 'json'), 'r'))["annotations"]
+    tileAnnos = json.load(open(PATH_TILE_RECORD + tileFileName.replace('jpg', 'json'), 'r'))["annotations"]
     for tileAnno in tileAnnos:
         anno = tileAnno["segmentation"][0]
         xs = anno[0::2]
