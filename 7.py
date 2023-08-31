@@ -19,7 +19,7 @@ cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
 predictor = DefaultPredictor(cfg)
 
 for d in random.sample(VA_DICT, 10):
-    img = numpy.asarray(Image.open(d["file_name"]).convert('RGB'))
+    img = numpy.asarray(Image.open(d["file_name"]))
     out = predictor(img)  # see https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
     v = Visualizer(img, metadata=MetadataCatalog.get("icelake_va"), scale=0.5)
     out = v.draw_instance_predictions(out["instances"].to("cpu"))

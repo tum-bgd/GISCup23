@@ -56,10 +56,10 @@ i = 0
 PLOT_TILE_MASK = False
 RELOAD = True
 if RELOAD:
-    ReloadDir(PATH_TILE_MASK, gitkeep=True)
-    ReloadDir(PATH_TILE_PLGN, gitkeep=True)
-    ReloadDir(PATH_TILE_WITHLABEL, gitkeep=True)
-    ReloadDir(PATH_TILE_NONELABEL, gitkeep=True)
+    ReloadDir(PATH_TILE_MASK)
+    ReloadDir(PATH_TILE_PLGN)
+    ReloadDir(PATH_TILE_WITHLABEL)
+    ReloadDir(PATH_TILE_NONELABEL)
 for file in os.listdir(PATH_PLGN):
     plgn = geopandas.read_file(PATH_PLGN + file)
     sampledTile = geopandas.GeoDataFrame(columns=['tile'], crs="EPSG:3857", geometry='tile')

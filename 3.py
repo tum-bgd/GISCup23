@@ -17,7 +17,7 @@ from utils.dir import ReloadDir
 PLOT = False
 RELOAD = True
 if RELOAD:
-    ReloadDir(PATH_TILE_RECORD, gitkeep=True)
+    ReloadDir(PATH_TILE_RECORD)
 
 
 def GetPlgnList(plgn):

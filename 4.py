@@ -10,7 +10,7 @@ from _config import *
 
 RELOAD = True
 if RELOAD:
-    ReloadDir(PATH_TILE_PLOT, gitkeep=True)
+    ReloadDir(PATH_TILE_PLOT)
 
 for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
     print("## Processing ##", tileFileName)

@@ -2,6 +2,8 @@ import geopandas
 import rasterio.mask
 from _config import *
 
+from utils.dir import ReloadDir
+
 
 ALL_RAW_IMAGE = [RAW_IMAGE1, RAW_IMAGE2, RAW_IMAGE3, RAW_IMAGE4]
 
@@ -16,7 +18,8 @@ REGION6 = {'name': '6', 'shape': reg[reg.region_num==6]["geometry"]}
 
 ALL_REGION = [REGION1, REGION2, REGION3, REGION4, REGION5, REGION6]
 
-
+ReloadDir(PATH_PLGN)
+ReloadDir(PATH_REGN)
 mask = geopandas.read_file(PATH_RAW_TRAIN)
 for img in ALL_RAW_IMAGE:
     imgName = img.split('_')[3][5:]
