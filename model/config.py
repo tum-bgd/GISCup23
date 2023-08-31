@@ -21,7 +21,7 @@ MetadataCatalog.get("icelake_va").set(thing_classes=["icelake"])
 
 def GetDetectronConfig():
     cfg = get_cfg()
-    cfg.input.format = "RGB"
+    cfg.INPUT.FORMAT = "RGB"
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
 
     cfg.MODEL.PIXEL_MEAN = [197.84357325, 204.8842635, 208.0415715]
@@ -31,7 +31,7 @@ def GetDetectronConfig():
     # cfg.DATASETS.TEST = ("icelake_va",)
     cfg.DATALOADER.NUM_WORKERS = 1
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")  # from model zoo
-    cfg.SOLVER.IMS_PER_BATCH = 24  # real batch size
+    cfg.SOLVER.IMS_PER_BATCH = 16  # real batch size
     cfg.SOLVER.BASE_LR = 0.001  # LR
     cfg.SOLVER.MAX_ITER = 800    # epoch
     # cfg.SOLVER.STEPS = []        # do not decay learning rate
