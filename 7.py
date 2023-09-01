@@ -20,12 +20,14 @@ cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")  # path to t
 cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.3
 predictor = DefaultPredictor(cfg)
 
-for d in random.sample(VA_DICT, 10):
+for d in random.sample(VA_DICT, 50):
     img = numpy.asarray(Image.open(d["file_name"]))
-    print(d["file_name"])
     out = predictor(img)  # see https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
-    v = Visualizer(img, metadata=MetadataCatalog.get("icelake_va"), scale=0.5)
-    out = v.draw_instance_predictions(out["instances"].to("cpu"))
+
+    mask = out["instances"].pred_masks.to("cpu")
+    print(mask.shape)
+    # v = Visualizer(img, metadata=MetadataCatalog.get("icelake_va"), scale=0.5)
+    # out = v.draw_instance_predictions(out["instances"].to("cpu"))
     # plt.subplot(131)
     # plt.imshow(numpy.asarray(Image.open(PATH_TILE_PLOT + d["file_name"].split('/')[-1])))
     # plt.subplot(132)
@@ -37,3 +39,4 @@ for d in random.sample(VA_DICT, 10):
 # evaluator = COCOEvaluator("icelake_va", output_dir="./output_va")
 # val_loader = build_detection_test_loader(cfg, "icelake_va")
 # print(inference_on_dataset(predictor.model, val_loader, evaluator))
+    # need scikit-image
