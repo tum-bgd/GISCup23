@@ -9,3 +9,5 @@ data/*.pkl
 detectron2/
 
 output/
+
+output_va/
