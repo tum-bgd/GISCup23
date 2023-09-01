@@ -14,10 +14,7 @@ if RELOAD:
 
 for tileFileName in os.listdir(PATH_TILE_WITHLABEL):
     print("## Processing ##", tileFileName)
-    plt.figure(figsize=(10.5, 5), dpi=200.0)
-    plt.subplot(121)
-    plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
-    plt.subplot(122)
+    plt.figure(figsize=(5.5, 5), dpi=200.0)
     plt.imshow(numpy.asarray(Image.open(PATH_TILE_WITHLABEL + tileFileName)))
     tileAnnos = json.load(open(PATH_TILE_RECORD + tileFileName.replace('jpg', 'json'), 'r'))["annotations"]
     for tileAnno in tileAnnos:

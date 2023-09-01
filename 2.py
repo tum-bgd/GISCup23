@@ -3,8 +3,8 @@ import cv2
 import geopandas
 import os
 import pandas as pd
-import shapely
 import rasterio.mask
+import shapely
 
 from matplotlib import pyplot as plt
 

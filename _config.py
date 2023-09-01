@@ -29,8 +29,7 @@ STEP = 512
 LOWER_BLUE = numpy.array([ 80,  35,  35])
 UPPER_BLUE = numpy.array([130, 255, 255])
 
-
-TR_RATIO = 0.75
+TR_RATIO = 0.95
 
 
 def TrOrTE(date, reg):
