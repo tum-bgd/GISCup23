@@ -14,6 +14,11 @@ PATH_TILE_NONELABEL = "./data/tilenonelabel/"
 PATH_TILE_PLOT = "./data/tileplot/"
 PATH_TILE_RECORD = "./data/tilerecord/"
 
+PATH_OUT_PREFIX = "./out/"
+PATH_OUT_TILE_MAYBE = PATH_OUT_PREFIX + "tilemaybe/"
+PATH_OUT_TILE_MAYNO = PATH_OUT_PREFIX + "tilemayno/"
+PATH_OUT_TILE_PLOT = PATH_OUT_PREFIX + "tileplot/"
+
 PATH_TR = "./data/train/"
 PATH_VA = "./data/valid/"
 

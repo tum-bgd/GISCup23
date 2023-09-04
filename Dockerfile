@@ -28,6 +28,7 @@ RUN wget https://bootstrap.pypa.io/pip/get-pip.py && \
 # Important! Otherwise, it uses existing numpy from host-modules which throws error
 RUN pip install --user numpy==1.20.3
 RUN pip install --user opencv-python
+RUN pip install --user shapely
 
 # install dependencies
 # See https://pytorch.org/ for other options if you use a different version of CUDA

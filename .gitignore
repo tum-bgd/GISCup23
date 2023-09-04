@@ -4,6 +4,7 @@ raw/*
 !raw/.gitkeep
 
 data/*/*
+out/*/*
 data/*.pkl
 
 detectron2/

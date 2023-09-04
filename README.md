@@ -12,7 +12,7 @@ Segmentation on images finding ice lakes in Greenland.
     conda env create -f env-preprocessing.yml
     ```
 
-3. Docker
+3. Docker image
 
     ```
     docker build --build-arg USER_ID=$UID -t detectron2 .
@@ -22,6 +22,13 @@ Segmentation on images finding ice lakes in Greenland.
 
     ```
     docker pull tumbgd/detectron2
+    ```
+
+ 4. Run a docker container
+
+    ```
+    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/gc23,type=bind tumbgd/detectron2
+    docker exec -it <container-id> bash
     ```
 
 ## Steps

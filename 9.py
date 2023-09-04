@@ -1,4 +1,4 @@
-# within docker, for va
+# within docker, for te
 
 import os
 import pickle
@@ -35,30 +35,16 @@ predictor = DefaultPredictor(cfg)
 # val_loader = build_detection_test_loader(cfg, "icelake_va")
 # print(inference_on_dataset(predictor.model, val_loader, evaluator))
 
-# ReloadDir(PATH_OUT_TILE_PLOT)
-for d in VA_DICT:
-    img = numpy.asarray(Image.open(d['file_name']))
-    masks, scores = GetEstimation(predictor, img)
-    pickle.dump([masks, scores], open('./output_va/est/' + d['file_name'].split('/')[-1].replace('jpg', 'pkl'), 'wb'))
-
-
-    
-
-    # plt.figure(figsize=(10.5, 5), dpi=200.0)
-    # plt.subplot(121)
-    # plt.imshow(img)
-    # plt.subplot(122)
-    # plt.imshow(mask.numpy(), cmap=plt.cm.gray)
-    # plt.savefig("./out/test/" + d['file_name'].split('/')[-1], dpi='figure')
-    # plt.close()
-
-
-    # v = Visualizer(img, metadata=MetadataCatalog.get("icelake_va"), scale=1.0)
-    # out = v.draw_instance_predictions(out["instances"].to("cpu"))
-    # plt.figure(figsize=(10.5, 5), dpi=200.0)
-    # plt.subplot(121)
-    # plt.imshow(img)
-    # plt.subplot(122)
-    # plt.imshow(out.get_image())
-    # plt.savefig(PATH_OUT_TILE_PLOT + d['file_name'].split('/')[-1], dpi='figure')
-    # plt.close()
+ReloadDir(PATH_OUT_TILE_PLOT)
+for imgName in os.listdir(PATH_OUT_TILE_MAYBE):
+    img = numpy.asarray(Image.open(PATH_OUT_TILE_MAYBE + imgName))
+    out = predictor(img[:, :, ::-1])  # to BGR mode
+    v = Visualizer(img, metadata=MetadataCatalog.get("icelake_va"), scale=1.0)
+    out = v.draw_instance_predictions(out["instances"].to("cpu"))
+    plt.figure(figsize=(10.5, 5), dpi=200.0)
+    plt.subplot(121)
+    plt.imshow(img)
+    plt.subplot(122)
+    plt.imshow(out.get_image())
+    plt.savefig(PATH_OUT_TILE_PLOT + imgName, dpi='figure')
+    plt.close()
