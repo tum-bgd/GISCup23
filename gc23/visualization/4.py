@@ -4,7 +4,7 @@ import os
 from matplotlib import pyplot as plt
 from PIL import Image
 
-from utils.dir import ReloadDir
+from gc23.utils.Dir import ReloadDir
 from _config import *
 
 

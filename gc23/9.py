@@ -14,7 +14,7 @@ from matplotlib import pyplot as plt
 from PIL import Image
 
 from _config import *
-from utils.dir import ReloadDir
+from gc23.utils.Dir import ReloadDir
 from model.config import GetDetectronConfig, VA_DICT, MetadataCatalog
 
 

@@ -1,14 +1,1 @@
-__pycache__/
-
-raw/*
-!raw/.gitkeep
-
-data/*/*
-out/*/*
-data/*.pkl
-
-detectron2/
-
-output/
-
-output_va/
+raw/

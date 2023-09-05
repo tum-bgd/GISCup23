@@ -1,22 +1,15 @@
-from . import *
-
 import os
-import pickle
 
 from detectron2 import model_zoo
 from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog, DatasetCatalog
 
-
-def GetDict(path):
-    with open(path, 'rb') as pklReader:
-        return pickle.load(pklReader)
+from .. import PATH_TMP_TR_TR_DICT, PATH_TMP_TR_VA_DICT
+from ..utils.Dir import LoadPKL
 
 
-TR_DICT = GetDict(PATH_TR_DICT)
-VA_DICT = GetDict(PATH_VA_DICT)
-DatasetCatalog.register("icelake_tr", lambda: GetDict(PATH_TR_DICT))
-DatasetCatalog.register("icelake_va", lambda: GetDict(PATH_VA_DICT))
+DatasetCatalog.register("icelake_tr", lambda: LoadPKL(PATH_TMP_TR_TR_DICT))
+DatasetCatalog.register("icelake_va", lambda: LoadPKL(PATH_TMP_TR_VA_DICT))
 MetadataCatalog.get("icelake_tr").set(thing_classes=["icelake"])
 MetadataCatalog.get("icelake_va").set(thing_classes=["icelake"])
 
@@ -41,8 +34,5 @@ def GetDetectronConfig(preTrained=False, preTrainedModelName="model_final.pth"):
     cfg.MODEL.RPN.BATCH_SIZE_PER_IMAGE = 3584
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 3584   # The "RoIHead batch size". 128 is faster, and good enough for this toy dataset (default: 512)
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (icelake)
+    cfg.OUTPUT_DIR = "./model/output"
     return cfg
-
-
-if __name__ == '__main__':
-    print(GetDetectronConfig())
