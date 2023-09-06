@@ -32,11 +32,17 @@ PATH_TMP_TR_TRAIN = os.path.join(PATH_TMP_TR, 'train')
 PATH_TMP_TR_VALID = os.path.join(PATH_TMP_TR, 'valid')
 PATH_TMP_TR_TR_DICT = os.path.join(PATH_TMP_TR, 'trDict.pkl')
 PATH_TMP_TR_VA_DICT = os.path.join(PATH_TMP_TR, 'vaDict.pkl')
+PATH_TMP_TR_VA_ESTM = os.path.join(PATH_TMP_TR, 'validest')
+PATH_TMP_TR_VA_ESTM_PLOT = os.path.join(PATH_TMP_TR, 'validestplot')
+
+PATH_MODEL_TR_OUTPUT = "./model/output"
 
 # for testing
 PATH_TMP_TE_TILE_MAYBE = os.path.join(PATH_TMP_TE, "tilemaybe")
 PATH_TMP_TE_TILE_MAYNO = os.path.join(PATH_TMP_TE, "tilemayno")
 PATH_TMP_TE_TILE_PLOT = os.path.join(PATH_TMP_TE, "tileplot")
+PATH_TMP_TE_ESTM = os.path.join(PATH_TMP_TE, "estm")
+PATH_TMP_TE_ESTM_PLOT = os.path.join(PATH_TMP_TE, "estmplot")
 
 # for tile
 TILE_H = 1024

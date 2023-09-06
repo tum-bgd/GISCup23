@@ -33,13 +33,23 @@ Segmentation on images finding ice lakes in Greenland.
 
 ## Steps
 
-- `1.py`: split dataset (both images and ice lake polygons) by the given 6 region polygons.
-- `2.py`: preprocessing
-    - cut image into tiles (1024 $\times$ 1024, step=512)
-    - screen out tiles with too much blank (>=50%)
-    - screen out tiles without blue pixels, as lakes are blue. (<0.01%, approx. 105 pixels)
-    - screen out tiles without labels (2652)
-    - save tiles with and without labels (2550)
+- `run1.py`:
+    - split dataset (both images and ice lake polygons) by the given 6 region polygons.
+    - preprocessing
+        - cut image into tiles (1024 $\times$ 1024, step=512)
+        - screen out tiles with too much blank (>=50%)
+        - screen out tiles without blue pixels, as lakes are blue. (<0.01%, approx. 105 pixels)
+        - screen out tiles without labels (this step is only applied to training area)
+        - save tiles with or without labels
+    - preparation for model training
+        - transform polygons into detectron2-compatible json format
+        - train-valid split
+
+- `run2.py`:
+    ```
+    python run2.py
+    python run2.py --retrain
+    ```
 
 TODO:
 

@@ -6,7 +6,7 @@ import rasterio.mask
 from matplotlib import pyplot as plt
 
 from . import *
-from gc23.utils.Dir import ReloadDir
+from gc23.utils.File import ReloadDir
 from gc23.utils.Geometry import *
 
 

@@ -1,4 +1,5 @@
 import cv2
+import numpy
 import shapely
 
 from gc23 import TILE_W, TILE_H, STEP, LOWER_BLUE, UPPER_BLUE
@@ -29,6 +30,10 @@ def GetMaybeLakeMask(img):
 
 
 def MaskToPlgn(mask):
+    """
+    mask: binary mask, will be transformed into uint8 within this func
+    """
+    mask = mask.astype(numpy.uint8)*255
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     plgns = []
     for contour in contours:

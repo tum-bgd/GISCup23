@@ -4,8 +4,8 @@ from detectron2 import model_zoo
 from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog, DatasetCatalog
 
-from .. import PATH_TMP_TR_TR_DICT, PATH_TMP_TR_VA_DICT
-from ..utils.Dir import LoadPKL
+from .. import PATH_TMP_TR_TR_DICT, PATH_TMP_TR_VA_DICT, PATH_MODEL_TR_OUTPUT
+from ..utils.File import LoadPKL
 
 
 DatasetCatalog.register("icelake_tr", lambda: LoadPKL(PATH_TMP_TR_TR_DICT))
@@ -14,8 +14,9 @@ MetadataCatalog.get("icelake_tr").set(thing_classes=["icelake"])
 MetadataCatalog.get("icelake_va").set(thing_classes=["icelake"])
 
 
-def GetDetectronConfig(preTrained=False, preTrainedModelName="model_final.pth"):
+def GetBaseConfig(_loadTrainedModel=False, _checkPointModel="model_final.pth"):
     cfg = get_cfg()
+    cfg.OUTPUT_DIR = PATH_MODEL_TR_OUTPUT
     cfg.INPUT.FORMAT = "RGB"  # for statistics
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml"))
 
@@ -26,13 +27,12 @@ def GetDetectronConfig(preTrained=False, preTrainedModelName="model_final.pth"):
     cfg.DATASETS.TEST = ()
     cfg.DATALOADER.NUM_WORKERS = 1
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml")  # from model zoo
-    if preTrained:
-        cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, preTrainedModelName)
+    if _loadTrainedModel:
+        cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, _checkPointModel)
     cfg.SOLVER.IMS_PER_BATCH = 32  # real batch size
     cfg.SOLVER.BASE_LR = 0.00008  # LR
     cfg.SOLVER.MAX_ITER = 10000    # epoch
     cfg.MODEL.RPN.BATCH_SIZE_PER_IMAGE = 3584
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 3584   # The "RoIHead batch size". 128 is faster, and good enough for this toy dataset (default: 512)
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (icelake)
-    cfg.OUTPUT_DIR = "./model/output"
     return cfg

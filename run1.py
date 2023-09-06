@@ -1,3 +1,5 @@
+# prepare data for training and testing
+
 import os
 os.chdir('./gc23')
 

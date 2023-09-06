@@ -7,10 +7,9 @@ import shapely
 import shutil
 
 from matplotlib import pyplot as plt
-from PIL import Image
 
 from . import *
-from gc23.utils.Dir import ReloadDir
+from gc23.utils.File import LoadImg, LoadJson, ReloadDir, SaveJson, SavePKL
 
 
 def GetPlgnList(plgn):
@@ -52,9 +51,9 @@ def PrepareTileLabel(reloadDir=True, plotTile=False):
             allPlgn = []
             plt.figure()
             plt.subplot(121)
-            plt.imshow(numpy.asarray(Image.open(os.path.join(PATH_TMP_TR_TILE_WITHLABEL, tileFileName))))
+            plt.imshow(LoadImg(os.path.join(PATH_TMP_TR_TILE_WITHLABEL, tileFileName)))
             plt.subplot(122)
-            plt.imshow(numpy.asarray(Image.open(os.path.join(PATH_TMP_TR_TILE_WITHLABEL, tileFileName))))
+            plt.imshow(LoadImg(os.path.join(PATH_TMP_TR_TILE_WITHLABEL, tileFileName)))
             for i in range(len(tilePlgn)):
                 plgn = tilePlgn[i].exterior.coords
                 allX, allY = [], []
@@ -78,8 +77,7 @@ def PrepareTileLabel(reloadDir=True, plotTile=False):
             record["annotations"] = allPlgn
             plt.close()
         k += 1
-        with open(os.path.join(PATH_TMP_TR_TILE_JSON, tileFileName.replace('jpg', 'json')), "w") as jsonFile:
-            json.dump(record, jsonFile)
+        SaveJson(record, os.path.join(PATH_TMP_TR_TILE_JSON, tileFileName.replace('jpg', 'json')))
 
 
 def TrVASplit(trRatio, reloadDir=True):
@@ -96,7 +94,7 @@ def TrVASplit(trRatio, reloadDir=True):
     trDict = []
     vaDict = []
     for tileFileName in os.listdir(PATH_TMP_TR_TILE_WITHLABEL):
-        thisDict = json.load(open(os.path.join(PATH_TMP_TR_TILE_JSON, tileFileName.replace('jpg', 'json')), 'r'))
+        thisDict = LoadJson(os.path.join(PATH_TMP_TR_TILE_JSON, tileFileName.replace('jpg', 'json')))
         if i in trIdx:
             shutil.copy(
                 os.path.join(PATH_TMP_TR_TILE_WITHLABEL, tileFileName),
@@ -116,5 +114,5 @@ def TrVASplit(trRatio, reloadDir=True):
     for d in vaDict:
         assert(isinstance(d, dict))
 
-    pickle.dump(trDict, open(PATH_TMP_TR_TR_DICT, 'wb'))
-    pickle.dump(vaDict, open(PATH_TMP_TR_VA_DICT, 'wb'))
+    SavePKL(trDict, PATH_TMP_TR_TR_DICT)
+    SavePKL(vaDict, PATH_TMP_TR_VA_DICT)
