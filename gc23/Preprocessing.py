@@ -168,3 +168,8 @@ def CutTeRegnToTiles(reloadDir=True):
                         i += 1
     print('# of img probably with labels in testing areas:', i)
     print('# of img unlikely with labels in testing areas:', j)
+
+
+def GetRegnSize(regnPath):
+     with rasterio.open(regnPath, "r") as pic:
+        return pic.height, pic.width

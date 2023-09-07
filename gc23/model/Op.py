@@ -2,7 +2,7 @@ from detectron2.engine import DefaultPredictor
 from detectron2.engine import DefaultTrainer
 from matplotlib import pyplot as plt
 
-from gc23 import TILE_H, TILE_W
+from gc23 import TILE_H, TILE_W, CONFINDENCE
 from gc23.model.config import *
 from gc23.utils.File import LoadImg, LoadJson, ReloadDir, SavePKL
 from gc23.utils.Geometry import MaskToPlgn
@@ -22,7 +22,7 @@ def Train(loadTrainedModel=False, checkPointModel="model_final.pth"):
     trainer.train()
 
 
-def GetTrainedModel(model, confindence=0.2):
+def GetTrainedModel(model, confindence=CONFINDENCE):
     """
     the model should be within `cfg.OUTPUT_DIR`
     """

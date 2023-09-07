@@ -8,7 +8,6 @@ from gc23 import \
     PATH_TMP_TR_VALID, PATH_TMP_TR_VA_ESTM, \
     PATH_TMP_TR_VA_ESTM_PLOT, PATH_TMP_TR_TILE_JSON, \
     PATH_TMP_TE_TILE_MAYBE, PATH_TMP_TE_ESTM, PATH_TMP_TE_ESTM_PLOT
-
 from gc23.model.Op import Train, GetTrainedModel, GetEstimationByFolder
 
 
@@ -37,7 +36,3 @@ GetEstimationByFolder(
     PATH_TMP_TE_ESTM,
     plot=True,
     plotFolder=PATH_TMP_TE_ESTM_PLOT)
-
-
-
-

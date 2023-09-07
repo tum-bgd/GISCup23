@@ -1,6 +1,5 @@
-import json
 import geopandas
-import pickle
+import pandas as pd
 import random
 import rasterio
 import shapely
@@ -9,7 +8,9 @@ import shutil
 from matplotlib import pyplot as plt
 
 from . import *
-from gc23.utils.File import LoadImg, LoadJson, ReloadDir, SaveJson, SavePKL
+from gc23.Preprocessing import GetRegnSize
+from gc23.utils.File import LoadImg, LoadJson, LoadPKL, ReloadDir, SaveJson, SavePKL
+from gc23.utils.Geometry import MaskToPlgn, PlgnToWorldPlgn
 
 
 def GetPlgnList(plgn):
@@ -116,3 +117,70 @@ def TrVASplit(trRatio, reloadDir=True):
 
     SavePKL(trDict, PATH_TMP_TR_TR_DICT)
     SavePKL(vaDict, PATH_TMP_TR_VA_DICT)
+
+
+def GetRegnEstMask(regnFileName, _plot=False):
+    h, w = GetRegnSize(os.path.join(PATH_REGN, regnFileName))
+    res = {
+        'estim': numpy.zeros((h, w)),
+        'count': numpy.zeros((h, w))
+    }
+    regnPrefix = regnFileName[:-5]
+
+    for estmFileName in os.listdir(PATH_TMP_TE_ESTM):
+        if regnPrefix in estmFileName:
+            tlW, tlH = list(map(int, estmFileName[:-4].split('_')[-2:]))  # tl = topleft
+            masks, score = LoadPKL(os.path.join(PATH_TMP_TE_ESTM, estmFileName))
+            if masks.shape[0]:
+                # have estimation (the predictor thinks there are lakes)
+                masks = masks.astype(float)
+                res['count'][tlH:tlH+TILE_H, tlW:tlW+TILE_W] += 1
+                for i in range(masks.shape[0]):
+                    res['estim'][tlH:tlH+TILE_H, tlW:tlW+TILE_W] += masks[i] * score[i]
+    res['estim'][res['estim'] < res['count'] * CONFINDENCE] = 0
+    res['estim'] = res['estim'] > 0
+    if _plot:
+        plt.figure(figsize=(16.5, 8), dpi=600)
+        plt.subplot(121)
+        plt.imshow(res['estim'])
+        plt.subplot(122)
+        plt.imshow(res['count'])
+        plt.savefig(os.path.join(PATH_TMP_TE_ESTM_REGN_PLOT, regnFileName.replace('tiff', 'jpg')), dpi='figure')
+        plt.close()
+    SavePKL(res['estim'], os.path.join(PATH_TMP_TE_ESTM_REGN, regnFileName.replace('tiff', 'pkl')))
+
+
+def GetAllRegnEstMask(plot=False):
+    ReloadDir(PATH_TMP_TE_ESTM_REGN)
+    ReloadDir(PATH_TMP_TE_ESTM_REGN_PLOT)
+    for regnFileName in os.listdir(PATH_REGN):
+        if 'te' in regnFileName:
+            GetRegnEstMask(regnFileName, _plot=plot)
+
+
+def RegnMaskToWorldPlgn():
+    ReloadDir(PATH_TMP_TE_ESTM_REAL_GPKG)
+    for resFileName in os.listdir(PATH_TMP_TE_ESTM_REGN):
+        date, regnIdx = resFileName.split('_')[:2]
+        gdf = geopandas.GeoDataFrame(columns=['image', 'region_num', 'geometry'], crs="EPSG:3857", geometry='geometry')
+        res = LoadPKL(os.path.join(PATH_TMP_TE_ESTM_REGN, resFileName))
+        plgns = MaskToPlgn(res)
+        with rasterio.open(os.path.join(PATH_REGN, resFileName.replace('pkl', 'tiff')), 'r') as regn:
+            for plgn in plgns:
+                wPlgn = PlgnToWorldPlgn(regn, plgn)
+                if wPlgn:
+                    gdf = pd.concat([
+                        gdf,
+                        geopandas.GeoDataFrame({
+                                 'image': [DATE2IMG[date]],
+                            'region_num': [int(regnIdx)],
+                              'geometry': [wPlgn]}, crs="EPSG:3857", geometry='geometry')], ignore_index=True)
+        gdf.to_file(os.path.join(PATH_TMP_TE_ESTM_REAL_GPKG, resFileName.replace('_te.pkl', '.gpkg')), driver="GPKG")
+
+
+def GetFinalResult():
+    gdf = geopandas.GeoDataFrame(columns=['image', 'region_num', 'geometry'], crs="EPSG:3857", geometry='geometry')
+    for fileName in sorted(os.listdir(PATH_TMP_TE_ESTM_REAL_GPKG)):
+        plgn = geopandas.read_file(os.path.join(PATH_TMP_TE_ESTM_REAL_GPKG, fileName))
+        gdf = pd.concat([gdf, plgn], ignore_index=True)
+    gdf.to_file(PATH_FINAL, driver="GPKG")

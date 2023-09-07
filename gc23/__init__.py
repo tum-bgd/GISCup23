@@ -7,6 +7,12 @@ RAW_IMAGE1 = "Greenland26X_22W_Sentinel2_2019-06-03_05.tif"
 RAW_IMAGE2 = "Greenland26X_22W_Sentinel2_2019-06-19_20.tif"
 RAW_IMAGE3 = "Greenland26X_22W_Sentinel2_2019-07-31_25.tif"
 RAW_IMAGE4 = "Greenland26X_22W_Sentinel2_2019-08-25_29.tif"
+DATE2IMG = {
+    '06-03': RAW_IMAGE1,
+    '06-19': RAW_IMAGE2,
+    '07-31': RAW_IMAGE3,
+    '08-25': RAW_IMAGE4
+}
 PATH_RAW = "../raw"
 PATH_RAW_TRAIN =  os.path.join(PATH_RAW, "lake_polygons_training.gpkg")
 PATH_RAW_REGION = os.path.join(PATH_RAW, "lakes_regions.gpkg")
@@ -43,6 +49,14 @@ PATH_TMP_TE_TILE_MAYNO = os.path.join(PATH_TMP_TE, "tilemayno")
 PATH_TMP_TE_TILE_PLOT = os.path.join(PATH_TMP_TE, "tileplot")
 PATH_TMP_TE_ESTM = os.path.join(PATH_TMP_TE, "estm")
 PATH_TMP_TE_ESTM_PLOT = os.path.join(PATH_TMP_TE, "estmplot")
+PATH_TMP_TE_ESTM_REGN = os.path.join(PATH_TMP_TE, "estmregn")
+PATH_TMP_TE_ESTM_REGN_PLOT = os.path.join(PATH_TMP_TE, "estmregnplot")
+PATH_TMP_TE_ESTM_REAL_GPKG = os.path.join(PATH_TMP_TE, "estmrealgpkg")
+
+CONFINDENCE = 0.2
+
+# final output
+PATH_FINAL = '../lake_polygons_test.gpkg'
 
 # for tile
 TILE_H = 1024

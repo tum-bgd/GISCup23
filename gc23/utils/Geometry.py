@@ -17,7 +17,7 @@ def GetTileTopLeft(w, h):
 
 def GetTilePlgn(picHandler, w, h):
     # xy()
-    tl = picHandler.xy(h,          w,        )
+    tl = picHandler.xy(h,          w         )
     tr = picHandler.xy(h,          w+TILE_W-1)
     bl = picHandler.xy(h+TILE_H-1, w         )
     br = picHandler.xy(h+TILE_H-1, w+TILE_W-1)
@@ -44,4 +44,17 @@ def MaskToPlgn(mask):
             ys.append(int(point[0][1]))
         plgns.append([xs, ys])
     return plgns
+
+
+def PlgnToWorldPlgn(picHandler, plgn):
+    ws, hs = plgn
+    assert len(ws) == len(hs)
+    if len(ws) < 4:
+        return None
+    points = []
+    for h, w in zip(hs, ws):
+        points.append(picHandler.xy(h, w))
+    # start = end
+    points[-1] = points[0]
+    return shapely.Polygon(points)
 
