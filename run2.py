@@ -20,6 +20,7 @@ if args.retrain:
 else:
     print("use trained model")
 
+# be care of the model name
 predictor = GetTrainedModel("model_final_2807.pth", confindence=0.2)
 # validation
 GetEstimationByFolder(

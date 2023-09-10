@@ -6,32 +6,28 @@ Segmentation on images finding ice lakes in Greenland.
 
 1. Download the dataset from the official website, and put all files in `./raw`
 
-2. Setup virtual environment for pre- and post-processing
+2. Docker image (based on tumbgd/detectron2)
 
     ```
-    conda env create -f env.yml
+    cd docker && docker build --build-arg USER_ID=$UID -t gc23 . && cd ..
     ```
 
-3. Docker image (for `run2.py` only)
+    or simply use the prebuilt image
 
     ```
-    docker build --build-arg USER_ID=$UID -t detectron2 .
+    docker pull xdrl1/gc23
     ```
 
-    or
+ 3. Run a docker container
 
     ```
-    docker pull tumbgd/detectron2
-    ```
-
- 4. Run a docker container (for `run2.py` only)
-
-    ```
-    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/gc23,type=bind tumbgd/detectron2
+    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/gc23,type=bind <gc23-image-id>
     docker exec -it <container-id> bash
     ```
 
 ## Steps
+
+`sudo` may be required.
 
 - `run1.py`:
     - split dataset (both images and ice lake polygons) by the given 6 region polygons.
@@ -44,7 +40,6 @@ Segmentation on images finding ice lakes in Greenland.
     - preparation for model training
         - transform polygons into detectron2-compatible json format
         - train-valid split
-    - Note that this script should be executed within the given conda environment (`env.yaml`)
 
 - `run2.py`:
     ```
@@ -52,12 +47,10 @@ Segmentation on images finding ice lakes in Greenland.
     python run2.py --retrain
     ```
     - With `--retrain` flag, a new Mask R-CNN model will be trained and make inference on the newly trained model. If this flag is not given, this script will only do inference using the finetuned model trained by me.
-    - Note that this script should be executed within docker.
 
 - `run3.py`:
     - Generate final result using masks for each region.
     - `lake_polygons_test.gpkg` will appear in the current directory.
-    - Note that this script should be executed within the given conda environment (`env.yaml`)
 
 
 ## Issues
@@ -69,3 +62,7 @@ Segmentation on images finding ice lakes in Greenland.
 2. lakes in maybe wrong area (e.g., region 4)
 
     - may manually specify valid/invalid area as a filter
+
+3. invalid geo polygon
+
+    - could be fixed by GDAL?
