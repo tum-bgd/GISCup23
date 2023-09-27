@@ -26,7 +26,7 @@ Please find a CUDA-enabled machine.
     cd docker && docker build --build-arg USER_ID=$UID -t gc23 . && cd ..
     ```
 
-4. (optional) If you want to use the model we trained / re-produce the result, please download the trained model file [here]() and manually place it in `./gc23/model/output`. The final file tree should be like:
+4. (optional) If you want to use the model we trained / re-produce the result, please download the trained model file [here](https://1drv.ms/u/s!Ai0oqAv9Sveg0OVeiauvvdKSOnko4A?e=1lwIWT) and manually place it in `./gc23/model/output`. The final file tree should be like:
 
     ```
     |-- LICENSE

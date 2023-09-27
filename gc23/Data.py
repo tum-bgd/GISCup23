@@ -162,8 +162,6 @@ def GetAllRegnEstMask(plot=False):
 def is_narrow_stream(polygon):
     # get minimum bounding rectangle
     box = shapely.minimum_rotated_rectangle(polygon)
-    if not isinstance(box, shapely.Polygon):
-        return True
 
     # get coordinates of polygon vertices
     x, y = box.exterior.coords.xy
@@ -191,12 +189,13 @@ def RegnMaskToWorldPlgn():
             for plgn in plgns:
                 wPlgn = PlgnToWorldPlgn(regn, plgn)
                 if wPlgn:
-                    gdf = pd.concat([
-                        gdf,
-                        geopandas.GeoDataFrame({
-                                 'image': [DATE2IMG[date]],
-                            'region_num': [int(regnIdx)],
-                              'geometry': [wPlgn]}, crs="EPSG:3857", geometry='geometry')], ignore_index=True)
+                    if isinstance(shapely.minimum_rotated_rectangle(wPlgn), shapely.Polygon):
+                        gdf = pd.concat([
+                            gdf,
+                            geopandas.GeoDataFrame({
+                                     'image': [DATE2IMG[date]],
+                                'region_num': [int(regnIdx)],
+                                  'geometry': [wPlgn]}, crs="EPSG:3857", geometry='geometry')], ignore_index=True)
 
         # Remove the holes (inner polygons) from the generated polygons
         gdf["geometry"] = gdf["geometry"].apply(lambda row: shapely.Polygon(row.exterior) if row.interiors else row)
