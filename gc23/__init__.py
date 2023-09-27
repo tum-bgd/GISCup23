@@ -53,7 +53,7 @@ PATH_TMP_TE_ESTM_REGN = os.path.join(PATH_TMP_TE, "estmregn")
 PATH_TMP_TE_ESTM_REGN_PLOT = os.path.join(PATH_TMP_TE, "estmregnplot")
 PATH_TMP_TE_ESTM_REAL_GPKG = os.path.join(PATH_TMP_TE, "estmrealgpkg")
 
-CONFINDENCE = 0.2
+CONFINDENCE = 0.3
 
 # final output
 PATH_FINAL = '../lake_polygons_test.gpkg'

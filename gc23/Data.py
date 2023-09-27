@@ -139,7 +139,14 @@ def GetRegnEstMask(regnFileName, _plot=False):
                     res['estim'][tlH:tlH+TILE_H, tlW:tlW+TILE_W] += masks[i] * score[i]
     res['estim'][res['estim'] < res['count'] * CONFINDENCE] = 0
     res['estim'] = res['estim'] > 0
-    # TODO: remove estimations at coast
+    # remove estimations at coast （3，4, 6）
+    regnIdx = int(regnFileName.split('_')[1])
+    if regnIdx == 3:
+        res['estim'][:, :3000] = 0
+    if regnIdx == 4:
+        res['estim'][:, :2000] = 0
+    if regnIdx == 6:
+        res['estim'][:, :5000] = 0
     if _plot:
         plt.figure(figsize=(16.5, 8), dpi=600)
         plt.subplot(121)
@@ -182,7 +189,7 @@ def RegnMaskToWorldPlgn():
     ReloadDir(PATH_TMP_TE_ESTM_REAL_GPKG)
     for resFileName in os.listdir(PATH_TMP_TE_ESTM_REGN):
         date, regnIdx = resFileName.split('_')[:2]
-        gdf = geopandas.GeoDataFrame(columns=['image', 'region_num', 'geometry'], crs="EPSG:3857", geometry='geometry')
+        gdf = geopandas.GeoDataFrame(columns=['geometry'], crs="EPSG:3857", geometry='geometry')
         res = LoadPKL(os.path.join(PATH_TMP_TE_ESTM_REGN, resFileName))
         plgns = MaskToPlgn(res)
         with rasterio.open(os.path.join(PATH_REGN, resFileName.replace('pkl', 'tiff')), 'r') as regn:
@@ -192,11 +199,15 @@ def RegnMaskToWorldPlgn():
                     if isinstance(shapely.minimum_rotated_rectangle(wPlgn), shapely.Polygon):
                         gdf = pd.concat([
                             gdf,
-                            geopandas.GeoDataFrame({
-                                     'image': [DATE2IMG[date]],
-                                'region_num': [int(regnIdx)],
-                                  'geometry': [wPlgn]}, crs="EPSG:3857", geometry='geometry')], ignore_index=True)
-
+                            geopandas.GeoDataFrame({'geometry': [wPlgn]}, crs="EPSG:3857", geometry='geometry')],
+                            ignore_index=True)
+        # remove plgn in plgn
+        plgnUnion = list(shapely.normalize(shapely.union_all(gdf["geometry"].buffer(0))).geoms)
+        # build sub gpkg
+        gdf = geopandas.GeoDataFrame(columns=['image', 'region_num', 'geometry'], crs="EPSG:3857", geometry='geometry')
+        gdf['image'] = [DATE2IMG[date]] * len(plgnUnion)
+        gdf['region_num'] = [int(regnIdx)] * len(plgnUnion)
+        gdf['geometry'] = plgnUnion
         # Remove the holes (inner polygons) from the generated polygons
         gdf["geometry"] = gdf["geometry"].apply(lambda row: shapely.Polygon(row.exterior) if row.interiors else row)
         # drop polygons that are narrow streams
