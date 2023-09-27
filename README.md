@@ -12,7 +12,7 @@ Please find a CUDA-enabled machine.
     git clone https://github.com/xdrl1/gc23.git
     ```
 
-2. Download the dataset (here)[https://sigspatial2023.sigspatial.org/giscup/download.html], and put all files in `./raw`
+2. Download the dataset [here](https://sigspatial2023.sigspatial.org/giscup/download.html), and put all files in `./raw`
 
 3. Docker image (based on tumbgd/detectron2)
 
