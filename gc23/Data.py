@@ -139,6 +139,7 @@ def GetRegnEstMask(regnFileName, _plot=False):
                     res['estim'][tlH:tlH+TILE_H, tlW:tlW+TILE_W] += masks[i] * score[i]
     res['estim'][res['estim'] < res['count'] * CONFINDENCE] = 0
     res['estim'] = res['estim'] > 0
+    # TODO: remove estimations at coast
     if _plot:
         plt.figure(figsize=(16.5, 8), dpi=600)
         plt.subplot(121)
@@ -158,6 +159,27 @@ def GetAllRegnEstMask(plot=False):
             GetRegnEstMask(regnFileName, _plot=plot)
 
 
+def is_narrow_stream(polygon):
+    # get minimum bounding rectangle
+    box = shapely.minimum_rotated_rectangle(polygon)
+    if not isinstance(box, shapely.Polygon):
+        return True
+
+    # get coordinates of polygon vertices
+    x, y = box.exterior.coords.xy
+
+    # get length of bounding box edges
+    edge_length = (
+        shapely.Point(x[0], y[0]).distance(shapely.Point(x[1], y[1])),
+        shapely.Point(x[1], y[1]).distance(shapely.Point(x[2], y[2])))
+
+    # get length and width of polygon as the longest and shortest edges of the rectangle
+    length = max(edge_length)
+    width = min(edge_length)
+
+    return width/length < 0.1
+
+
 def RegnMaskToWorldPlgn():
     ReloadDir(PATH_TMP_TE_ESTM_REAL_GPKG)
     for resFileName in os.listdir(PATH_TMP_TE_ESTM_REGN):
@@ -175,6 +197,13 @@ def RegnMaskToWorldPlgn():
                                  'image': [DATE2IMG[date]],
                             'region_num': [int(regnIdx)],
                               'geometry': [wPlgn]}, crs="EPSG:3857", geometry='geometry')], ignore_index=True)
+
+        # Remove the holes (inner polygons) from the generated polygons
+        gdf["geometry"] = gdf["geometry"].apply(lambda row: shapely.Polygon(row.exterior) if row.interiors else row)
+        # drop polygons that are narrow streams
+        gdf.drop(gdf[gdf["geometry"].apply(is_narrow_stream)].index, inplace=True)
+        # drop polygons that are smaller than 0.1km^2
+        gdf.drop(gdf[gdf["geometry"].area < 100000].index, inplace=True)
         gdf.to_file(os.path.join(PATH_TMP_TE_ESTM_REAL_GPKG, resFileName.replace('_te.pkl', '.gpkg')), driver="GPKG")
 
 

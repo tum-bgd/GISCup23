@@ -2,32 +2,90 @@
 
 Segmentation on images finding ice lakes in Greenland.
 
-## Setup
+## Environment setup
 
-1. Download the dataset from the official website, and put all files in `./raw`
+Please find a CUDA-enabled machine.
 
-2. Docker image (based on tumbgd/detectron2)
+1. Clone this repo
 
     ```
-    cd docker && docker build --build-arg USER_ID=$UID -t gc23 . && cd ..
+    git clone https://github.com/xdrl1/gc23.git
     ```
 
-    or simply use the prebuilt image
+2. Download the dataset (here)[https://sigspatial2023.sigspatial.org/giscup/download.html], and put all files in `./raw`
+
+3. Docker image (based on tumbgd/detectron2)
 
     ```
     docker pull xdrl1/gc23
     ```
 
- 3. Run a docker container
+    or build by your self
+
+    ```
+    cd docker && docker build --build-arg USER_ID=$UID -t gc23 . && cd ..
+    ```
+
+4. (optional) If you want to use the model we trained / re-produce the result, please download the trained model file [here]() and manually place it in `./gc23/model/output`. The final file tree should be like:
+
+    ```
+    |-- LICENSE
+    |-- README.md
+    |-- docker
+    |   |-- Dockerfile
+    |   `-- detectron2
+    |-- env.yml
+    |-- gc23
+    |   |-- Data.py
+    |   |-- Preprocessing.py
+    |   |-- __init__.py
+    |   |-- misc
+    |   |   |-- DataStat.py
+    |   |   `-- color.py
+    |   |-- model
+    |   |   |-- Op.py
+    |   |   |-- __init__.py
+    |   |   |-- config.py
+    |   |   `-- output
+    |   |       `-- model_final_2807.pth
+    |   `-- utils
+    |       |-- File.py
+    |       |-- Geometry.py
+    |       `-- __init__.py
+    |-- raw
+    |   |-- GISCup_2023_datasets_readme.pdf
+    |   |-- Greenland26X_22W_Sentinel2_2019-06-03_05.tif
+    |   |-- Greenland26X_22W_Sentinel2_2019-06-19_20.tif
+    |   |-- Greenland26X_22W_Sentinel2_2019-07-31_25.tif
+    |   |-- Greenland26X_22W_Sentinel2_2019-08-25_29.tif
+    |   |-- lake_polygons_training.gpkg
+    |   `-- lakes_regions.gpkg
+    |-- run1.py
+    |-- run2.py
+    `-- run3.py
+    ```
+
+5. Run a docker container mapping the code repository with raw data
 
     ```
     docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/gc23,type=bind <gc23-image-id>
     docker exec -it <container-id> bash
     ```
 
-## Steps
+## Steps for result reproduction
 
-`sudo` may be required.
+Within the docker container, run
+
+    ```
+    cd gc23
+    sudo python run1.py
+    sudo python run2.py
+    sudo python run3.py
+    ```
+
+Then you can find the final `lake_polygons_test.gpkg` at current folder root. Note that `sudo` is required.
+
+### Explanation
 
 - `run1.py`:
     - split dataset (both images and ice lake polygons) by the given 6 region polygons.
@@ -50,19 +108,8 @@ Segmentation on images finding ice lakes in Greenland.
 
 - `run3.py`:
     - Generate final result using masks for each region.
+    - Postprocessing (refer to [Solution Guidelines](https://sigspatial2023.sigspatial.org/giscup/problem.html))
+        - remove *hole(s) in a lake*
+        - remove small lakes
+        - remove narrow streams
     - `lake_polygons_test.gpkg` will appear in the current directory.
-
-
-## Issues
-
-1. *holes* in lakes (e.g., 08-25, region2)
-
-    - may solve by union
-
-2. lakes in maybe wrong area (e.g., region 4)
-
-    - may manually specify valid/invalid area as a filter
-
-3. invalid geo polygon
-
-    - could be fixed by GDAL?
