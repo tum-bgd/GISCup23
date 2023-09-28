@@ -2,6 +2,10 @@
 
 Segmentation on images finding ice lakes in Greenland.
 
+## Requirements
+A CUDA-enabled Unix machine with installed docker and git. 
+You can find installation instructions for docker [here](https://docs.docker.com/engine/install/) and for git [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+
 ## Environment setup
 
 Please find a CUDA-enabled machine.
