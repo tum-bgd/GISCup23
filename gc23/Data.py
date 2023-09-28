@@ -31,7 +31,6 @@ def GetPlgnList(plgn):
 
 def PrepareTileLabel(reloadDir=True, plotTile=False):
     # get json label formatted for detectron2
-    # TODO why plus 0.5, although float required, then why not add 0.1
     if reloadDir:
         ReloadDir(PATH_TMP_TR_TILE_JSON)
     k = 0
