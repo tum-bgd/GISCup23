@@ -92,6 +92,8 @@ sudo python run2.py
 sudo python run3.py
 ```
 
+> !Warnings can be ignored!
+
 Then you can find the final `lake_polygons_test.gpkg` at current folder root. Note that `sudo` is required.
 
 ### Explanation
