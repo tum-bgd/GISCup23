@@ -81,12 +81,12 @@ Please find a CUDA-enabled machine.
 
 Within the docker container, run
 
-    ```
-    cd GISCup23
-    sudo python run1.py
-    sudo python run2.py
-    sudo python run3.py
-    ```
+```
+cd GISCup23
+sudo python run1.py
+sudo python run2.py
+sudo python run3.py
+```
 
 Then you can find the final `lake_polygons_test.gpkg` at current folder root. Note that `sudo` is required.
 
