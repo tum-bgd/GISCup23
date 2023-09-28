@@ -14,10 +14,10 @@ Please find a CUDA-enabled machine.
 
 2. Download the dataset [here](https://sigspatial2023.sigspatial.org/giscup/download.html), and put all files in `./raw`
 
-3. Docker image (based on tumbgd/detectron2)
+3. Docker image
 
     ```
-    docker pull xdrl1/gc23
+    docker pull tumbgd/gc23
     ```
 
     or build by your self
@@ -68,7 +68,7 @@ Please find a CUDA-enabled machine.
 5. Run a docker container mapping the code repository with raw data
 
     ```
-    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/GISCup23,type=bind <docker-image-id>
+    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/GISCup23,type=bind gc23
     docker exec -it <docker-container-id> bash
     ```
 
