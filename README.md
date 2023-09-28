@@ -68,7 +68,7 @@ Please find a CUDA-enabled machine.
 5. Run a docker container mapping the code repository with raw data
 
     ```
-    docker run --gpus device=0 -d -it --shm-size 32G --mount source="$(pwd)"/.,target=/home/appuser/GISCup23,type=bind <docker-image-id>
+    docker run --gpus device=0 -d -it --shm-size 32G --mount source=$(pwd),target=/home/appuser/GISCup23,type=bind <docker-image-id>
     docker exec -it <docker-container-id> bash
     ```
 
