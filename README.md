@@ -9,7 +9,7 @@ Please find a CUDA-enabled machine.
 1. Clone this repo
 
     ```
-    git clone https://github.com/xdrl1/gc23.git
+    git clone https://github.com/tum-bgd/GISCup23.git
     ```
 
 2. Download the dataset [here](https://sigspatial2023.sigspatial.org/giscup/download.html), and put all files in `./raw`
@@ -68,8 +68,8 @@ Please find a CUDA-enabled machine.
 5. Run a docker container mapping the code repository with raw data
 
     ```
-    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/gc23,type=bind <gc23-image-id>
-    docker exec -it <container-id> bash
+    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/GISCup23,type=bind <docker-image-id>
+    docker exec -it <docker-container-id> bash
     ```
 
 ## Steps for result reproduction
@@ -77,7 +77,7 @@ Please find a CUDA-enabled machine.
 Within the docker container, run
 
     ```
-    cd gc23
+    cd GISCup23
     sudo python run1.py
     sudo python run2.py
     sudo python run3.py
