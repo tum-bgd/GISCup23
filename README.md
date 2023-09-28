@@ -20,7 +20,7 @@ Please find a CUDA-enabled machine.
     docker pull tumbgd/gc23
     ```
 
-    or build by your self
+    or build by yourself
 
     ```
     cd docker && docker build --build-arg USER_ID=$UID -t gc23 . && cd ..
@@ -68,9 +68,14 @@ Please find a CUDA-enabled machine.
 5. Run a docker container mapping the code repository with raw data
 
     ```
-    docker run --gpus device=0 -d -it --shm-size 32G --mount source=<code-src>,target=/home/appuser/GISCup23,type=bind gc23
+    docker run --gpus device=0 -d -it --shm-size 32G --mount source="$(pwd)"/.,target=/home/appuser/GISCup23,type=bind <docker-image-id>
     docker exec -it <docker-container-id> bash
     ```
+
+    Hints:
+
+    - Use command `docker images` to obtain information of all docker images on your machine.
+    - Use command `docker ps -a` to obtain information of all docker containers on your machine.
 
 ## Steps for result reproduction
 
