@@ -124,3 +124,7 @@ Then you can find the final `lake_polygons_test.gpkg` at current folder root. No
         - remove small lakes
         - remove narrow streams
     - `lake_polygons_test.gpkg` will appear in the current directory.
+
+## Authors
+
+Xuanshu Luo, Paul Walther, Wejdene Mansour, Balthasar Teuscher, Johann Maximilian Zollner, Hao Li, Martin Werner, Professur für Big Geospatial Data Management, Technische Universität München
