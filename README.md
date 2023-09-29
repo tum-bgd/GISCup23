@@ -1,4 +1,4 @@
-# GC23
+# GISCUP 2023
 
 Segmentation on images finding ice lakes in Greenland.
 
