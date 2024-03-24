@@ -125,6 +125,22 @@ Then you can find the final `lake_polygons_test.gpkg` at current folder root. No
         - remove narrow streams
     - `lake_polygons_test.gpkg` will appear in the current directory.
 
-## Authors
-
-Xuanshu Luo, Paul Walther, Wejdene Mansour, Balthasar Teuscher, Johann Maximilian Zollner, Hao Li, Martin Werner, Professur für Big Geospatial Data Management, Technische Universität München
+## Citation
+```
+@inproceedings{10.1145/3589132.3629971,
+    author = {Luo, Xuanshu and Walther, Paul and Mansour, Wejdene and Teuscher, Balthasar and Zollner, Johann Maximilian and Li, Hao and Werner, Martin},
+    title = {Exploring GeoAI Methods for Supraglacial Lake Mapping on Greenland Ice Sheet},
+    year = {2023},
+    isbn = {9798400701689},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3589132.3629971},
+    doi = {10.1145/3589132.3629971},
+    booktitle = {Proceedings of the 31st ACM International Conference on Advances in Geographic Information Systems},
+    articleno = {16},
+    numpages = {4},
+    keywords = {segment anything model, mask R-CNN, computer vision, satellite imagery, image segmentation, supraglacial lakes},
+    location = {<conf-loc>, <city>Hamburg</city>, <country>Germany</country>, </conf-loc>},
+    series = {SIGSPATIAL '23}
+}
+```
